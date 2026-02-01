@@ -110,7 +110,7 @@ async def fetch_journal_papers():
     return papers
 
 def summarize_item(item):
-    """OpenAIを使用して3行要約を生成 (ニュースと論文でプロンプトを微調整)"""
+    """OpenAIを使用して3行要約を生成 (最新のSDK形式)"""
     is_paper = item.get("type") == "paper"
     role_desc = "医療IT・デジタルヘルス専門の編集者" if not is_paper else "医学論文の解説に長けたサイエンスライター"
     
@@ -122,19 +122,22 @@ def summarize_item(item):
     """
     
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4o",
             messages=[{"role": "system", "content": f"あなたは優秀な{role_desc}です。"},
                       {"role": "user", "content": prompt}]
         )
-        lines = response.choices[0].message.content.strip().split("\n")
+        content = response.choices[0].message.content.strip()
+        lines = content.split("\n")
+        # 「・」を除去して整形
         return {
-            "point": lines[0].replace("・", "").strip() if len(lines) > 0 else "N/A",
-            "background": lines[1].replace("・", "").strip() if len(lines) > 1 else "N/A",
-            "impact": lines[2].replace("・", "").strip() if len(lines) > 2 else "N/A"
+            "point": lines[0].replace("・", "").replace("要点：", "").strip() if len(lines) > 0 else "N/A",
+            "background": lines[1].replace("・", "").replace("背景：", "").strip() if len(lines) > 1 else "N/A",
+            "impact": lines[2].replace("・", "").replace("影響：", "").strip() if len(lines) > 2 else "N/A"
         }
-    except:
-        return {"point": "要約生成失敗", "background": "APIエラー", "impact": "N/A"}
+    except Exception as e:
+        print(f"Summary Error ({item['title'][:20]}...): {e}")
+        return {"point": "要約生成失敗", "background": f"Error: {str(e)[:50]}", "impact": "N/A"}
 
 async def main():
     today_str = datetime.now().strftime("%Y-%m-%d")
