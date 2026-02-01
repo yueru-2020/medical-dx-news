@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医療DXニュースキュレーション | 最新動向まとめ</title>
+    <meta name="description" content="日経新聞から収集した最新の医療DX関連記事を、編集者目線で要約してご紹介します。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #0056b3;
+            --accent-color: #e63946;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --text-main: #212529;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--card-background);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 4px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 3rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .header-desc {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .news-grid {
+            display: grid;
+            gap: 2rem;
+            padding-bottom: 4rem;
+        }
+
+        .news-card {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .news-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            border-left: 5px solid var(--accent-color);
+            padding-left: 1rem;
+            line-height: 1.3;
+        }
+
+        .summary-item {
+            margin-bottom: 1rem;
+        }
+
+        .label {
+            display: inline-block;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-bottom: 0.3rem;
+            color: #fff;
+        }
+
+        .label-point { background-color: #2a9d8f; }
+        .label-background { background-color: #264653; }
+        .label-impact { background-color: #e76f51; }
+
+        .content {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .article-link {
+            margin-top: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .article-link::after {
+            content: '→';
+            margin-left: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .article-link:hover::after {
+            transform: translateX(5px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .news-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>医療DX 最新ニュース・キュレーション</h1>
+        <p class="header-desc">日経新聞より注目のトピックを厳選（2026年1月現在）</p>
+    </div>
+</header>
+
+<main class="container">
+    <div class="news-grid">
+        <!-- Article 1 -->
+        <article class="news-card" id="article-1">
+            <h2>マイナ保険証が原則に　重複投薬を抑制、紙の保険証も暫定利用可</h2>
+            <div class="summary-item">
+                <span class="label label-point">要点</span>
+                <p class="content">12月2日からマイナ保険証が原則化され、医師・薬剤師が受診歴や処方情報を即時確認可能に。重複投薬の防止と医療費抑制を図る。</p>
+            </div>
+            <div class="summary-item">
+                <span class="label label-background">背景</span>
+                <p class="content">政府が進める医療デジタルトランスフォーメーションの一環で、データ連携による医療の効率化と質の向上を全国規模で推進中。</p>
+            </div>
+            <div class="summary-item">
+                <span class="label label-impact">マーケターへの影響</span>
+                <p class="content">医療データの統合により、個人の健康状態に基づいたパーソナライズ製品や保険サービスの需要が急増。高精度なターゲティングの鍵となる。</p>
+            </div>
+            <a href="https://www.nikkei.com/article/DGXZQOUA19B200Z11C25A1000000/" class="article-link" target="_blank" rel="noopener">日経新聞で続きを読む</a>
+        </article>
+
+        <!-- Article 2 -->
+        <article class="news-card" id="article-2">
+            <h2>医療人材不足はAIで解消せよ　チャン・クォック・ズン氏</h2>
+            <div class="summary-item">
+                <span class="label label-point">要点</span>
+                <p class="content">深刻化する医療人材不足と重労働に対し、AI活用による抜本的な業務効率化を提言。看護師の約35%が離職を検討する現状を打破する。</p>
+            </div>
+            <div class="summary-item">
+                <span class="label label-background">背景</span>
+                <p class="content">過酷な長時間勤務と地域間の医師偏在が常態化。持続可能な医療サービス提供には、テクノロジーによる負担軽減が不可欠。</p>
+            </div>
+            <div class="summary-item">
+                <span class="label label-impact">マーケターへの影響</span>
+                <p class="content">医療機関向けB2Bマーケティングでは、機能訴求以上に「業務時間短縮」や「スタッフ離職防止」という価値訴求が決定打となる。</p>
+            </div>
+            <a href="https://www.nikkei.com/article/DGXZQOUC0924D0Z01C25A0000000/" class="article-link" target="_blank" rel="noopener">日経新聞で続きを読む</a>
+        </article>
+
+        <!-- Article 3 -->
+        <article class="news-card" id="article-3">
+            <h2>松本尚デジタル相「医療DXに道筋」　高市早苗首相の意向受け</h2>
+            <div class="summary-item">
+                <span class="label label-point">要点</span>
+                <p class="content">松本デジタル相が医療DXへの注力を表明。外科医のバックグラウンドを背景に、厚労省との連携を強化し政治主導でインフラ整備を加速。</p>
+            </div>
+            <div class="summary-item">
+                <span class="label label-background">背景</span>
+                <p class="content">高市政権下で医療DXが最優先の国家プロジェクトと位置付けられ、縦割り行政の解消とデジタル基盤の刷新が急がれている。</p>
+            </div>
+            <div class="summary-item">
+                <span class="label label-impact">マーケターへの影響</span>
+                <p class="content">国を挙げたデジタル化の大きな潮流により、官民連携プロジェクトや公的データを活用した新規事業の立ち上げチャンスが拡大する。</p>
+            </div>
+            <a href="https://www.nikkei.com/article/DGXZQOUA318DH0R31C25A0000000/" class="article-link" target="_blank" rel="noopener">日経新聞で続きを読む</a>
+        </article>
+
+        <!-- Article 4 -->
+        <article class="news-card" id="article-4">
+            <h2>琉球銀行、医療DX支援へ業務提携　自動精算機のAPOSTROと</h2>
+            <div class="summary-item">
+                <span class="label label-point">要点</span>
+                <p class="content">琉球銀行が自動精算機メーカーと提携し、県内医療機関のDX導入を支援。フィナンシャルとリアルの両面から事務負担削減を後押し。</p>
+            </div>
+            <div class="summary-item">
+                <span class="label label-background">背景</span>
+                <p class="content">地方の診療所や薬局での事務作業負担が深刻な中、地銀がハブとなり周辺ソリューションへの投資を促す動きが活発化。</p>
+            </div>
+            <div class="summary-item">
+                <span class="label label-impact">マーケターへの影響</span>
+                <p class="content">地方医療圏のキャッシュレス・受付DXが進むことで、新たな決済データ活用や、CX（顧客体験）向上に紐付く周辺ツールの商機が広がる。</p>
+            </div>
+            <a href="https://www.nikkei.com/article/DGXZQOJC312VB0R31C25A0000000/" class="article-link" target="_blank" rel="noopener">日経新聞で続きを読む</a>
+        </article>
+
+        <!-- Article 5 -->
+        <article class="news-card" id="article-5">
+            <h2>医療DXのメドレー瀧口浩平社長「AIでクリニックの業務を改革」</h2>
+            <div class="summary-item">
+                <span class="label label-point">要点</span>
+                <p class="content">メドレーが生成AIを搭載した次世代プラットフォームを開始。クリニックと薬局間の患者体験をシームレスに繋ぎ、業務効率を劇的に向上。</p>
+            </div>
+            <div class="summary-item">
+                <span class="label label-background">背景</span>
+                <p class="content">これまで分断されていた患者の通院・薬歴データをクラウドで統合。AIによる指導支援で、医療従事者のリソース不足を補う。</p>
+            </div>
+            <div class="summary-item">
+                <span class="label label-impact">マーケターへの影響</span>
+                <p class="content">患者ジャーニーのデジタル化により、これまで捕捉困難だった「院外処方後の行動」まで見据えた広告配信やケア提案が可能になる。</p>
+            </div>
+            <a href="https://www.nikkei.com/article/DGXZQOUC096R10Z00C25A9000000/" class="article-link" target="_blank" rel="noopener">日経新聞で続きを読む</a>
+        </article>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2026 Medical DX Curation Tool. Summary generated for educational purposes.</p>
+    </div>
+</footer>
+
+</body>
+</html>
