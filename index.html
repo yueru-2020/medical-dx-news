@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>医療DX & AI ニュースキュレーション | 最新動向まとめ</title>
-    <meta name="description" content="日経新聞とPR TIMESから収集した最新の医療DX・AI関連記事を、編集者目線で要約。毎日10記事更新。">
+    <title>2026-02-01 | 医療DX & AI ニュース・論文</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -21,7 +20,7 @@
             --text-main: #212529;
             --text-secondary: #495057;
             --text-muted: #6c757d;
-            --transition: all 0.3s ease;
+            --paper-color: #6a1b9a;
         }
 
         * {
@@ -39,11 +38,10 @@
 
         header {
             background-color: var(--card-background);
-            padding: 2.5rem 1rem;
+            padding: 2rem 1rem;
             text-align: center;
             border-bottom: 4px solid var(--primary-color);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
 
         .container {
@@ -60,52 +58,40 @@
             font-size: 0.8rem;
             font-weight: 700;
             display: inline-block;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.5px;
-        }
-
-        .header-desc {
-            color: var(--text-muted);
-            font-size: 1.1rem;
         }
 
         .section-title {
             font-size: 1.5rem;
-            margin: 3rem 0 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #ddd;
+            margin: 2rem 0 1rem;
             color: var(--primary-color);
-            display: flex;
-            align-items: center;
+            border-left: 5px solid var(--primary-color);
+            padding-left: 1rem;
+        }
+
+        .section-title.paper {
+            color: var(--paper-color);
+            border-color: var(--paper-color);
         }
 
         .news-grid {
             display: grid;
             gap: 1.5rem;
             grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-            padding-bottom: 2rem;
         }
 
         .news-card {
             background-color: var(--card-background);
             border-radius: 12px;
-            padding: 1.8rem;
+            padding: 1.5rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: var(--transition);
             display: flex;
             flex-direction: column;
-        }
-
-        .news-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
 
         .source-tag {
@@ -126,25 +112,18 @@
             margin-right: 0.5rem;
         }
 
-        .news-card h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1.2rem;
-            color: var(--primary-color);
-            line-height: 1.4;
-        }
-
-        .summary-item {
-            margin-bottom: 0.8rem;
+        .source-tag.paper-tag::before {
+            background-color: var(--paper-color);
         }
 
         .label {
             display: inline-block;
             font-weight: 700;
-            font-size: 0.75rem;
-            padding: 0.15rem 0.5rem;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
             border-radius: 4px;
-            margin-bottom: 0.2rem;
             color: #fff;
+            margin-right: 0.5rem;
         }
 
         .label-point {
@@ -159,38 +138,53 @@
             background-color: #e76f51;
         }
 
-        .content {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
+        .summary-item {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .article-link {
             margin-top: auto;
+            text-align: right;
             text-decoration: none;
             color: var(--secondary-color);
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             padding-top: 1rem;
-            border-top: 1px solid #eee;
-            text-align: right;
         }
 
-        footer {
-            text-align: center;
-            padding: 4rem 1rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            background: #eee;
-            margin-top: 4rem;
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 3rem;
+            gap: 2rem;
+            padding-bottom: 3rem;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 700;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .nav-btn.disabled {
+            color: #ccc;
+            border-color: #ccc;
+            pointer-events: none;
         }
 
         @media (max-width: 600px) {
             .news-grid {
                 grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: 1.8rem;
             }
         }
     </style>
@@ -200,176 +194,80 @@
 
     <header>
         <div class="container">
-            <span class="update-badge">Daily Update: 2026.02.01</span>
-            <h1>医療DX & AI キュレーション</h1>
-            <p class="header-desc">日経新聞 & PR TIMESから厳選した最新10トレンド</p>
+            <span class="update-badge">Update: 2026-02-01</span>
+            <h1>医療DX & AI ニュース・論文報</h1>
         </div>
     </header>
 
     <main class="container">
-        <h2 class="section-title">Nikkei News (医療DX)</h2>
+        <!-- ニュースセクション -->
+        <h2 class="section-title">最新ビジネス・ニュース</h2>
         <div class="news-grid">
-            <!-- Nikkei 1-5 (Placeholder for mock integration) -->
-            <article class="news-card">
-                <span class="source-tag">日本経済新聞</span>
-                <h2>PHR普及推進フォーラム2026開催決定、医療DXの社会実装を議論</h2>
-                <div class="summary-item"><span class="label label-point">要点</span>
-                    <p class="content">2月末にPHR（個人健康記録）の普及を目指す大規模フォーラム開催。厚労省・経産省が登壇。</p>
-                </div>
-                <div class="summary-item"><span class="label label-background">背景</span>
-                    <p class="content">医療DXの基盤整備が進み、データを患者自身が活用するPHRのフェーズへと政策が移行している。</p>
-                </div>
-                <div class="summary-item"><span class="label label-impact">影響</span>
-                    <p class="content">アプリ開発者やデータプラットフォーマーにとって、公的API連携の具体策が見える重要な分岐点。</p>
-                </div>
-                <a href="https://www.nikkei.com/" class="article-link">日経新聞で続きを読む</a>
-            </article>
-
-            <article class="news-card">
-                <span class="source-tag">日本経済新聞</span>
-                <h2>医療費効率化へ、不適切入院の是正とデジタル監視が加速</h2>
-                <div class="summary-item"><span class="label label-point">要点</span>
-                    <p class="content">膨張する医療費抑制のため、データの可視化による不適切入院のチェックを厳格化する動き。</p>
-                </div>
-                <div class="summary-item"><span class="label label-background">背景</span>
-                    <p class="content">医師の3割が不要な入院を経験したとする調査もあり、経営と医療品質の両立が問われている。</p>
-                </div>
-                <div class="summary-item"><span class="label label-impact">影響</span>
-                    <p class="content">病院経営Navi等のツール需要が増加。データに基づいた適切な診療報酬請求の自動化が急務。</p>
-                </div>
-                <a href="https://www.nikkei.com/" class="article-link">日経新聞で続きを読む</a>
-            </article>
-
-            <!-- ... 追加の3記事 (省略/実際には10件並べる) ... -->
-            <article class="news-card">
-                <span class="source-tag">日本経済新聞</span>
-                <h2>AIと未来ウェビナー、医療分野の10年後を展望</h2>
-                <div class="summary-item"><span class="label label-point">要点</span>
-                    <p class="content">日経BPがAI浸透後の医療現場を予測。診断支援から予防医療への完全移行がテーマ。</p>
-                </div>
-                <div class="summary-item"><span class="label label-background">背景</span>
-                    <p class="content">生成AIの登場により、従来の画像診断AIを超えた「対話型医療支援」の実現性が高まった。</p>
-                </div>
-                <div class="summary-item"><span class="label label-impact">影響</span>
-                    <p class="content">診断アルゴリズムだけでなく、患者の行動変容を促すエンゲージメントモデルへ投資がシフト。</p>
-                </div>
-                <a href="https://www.nikkei.com/" class="article-link">日経新聞で続きを読む</a>
-            </article>
-
-            <article class="news-card">
-                <span class="source-tag">日本経済新聞</span>
-                <h2>マイナ保険証利用率アップへ、窓口での声掛けを義務化に近い形へ</h2>
-                <div class="summary-item"><span class="label label-point">要点</span>
-                    <p class="content">利用率停滞を打破するため、医療機関の窓口対応における強力なインセンティブと指導を実施。</p>
-                </div>
-                <div class="summary-item"><span class="label label-background">背景</span>
-                    <p class="content">カード普及は進んだものの、病院・薬局での実利用が低迷しており、DX基盤が十分に機能していない。</p>
-                </div>
-                <div class="summary-item"><span class="label label-impact">影響</span>
-                    <p class="content">受付フローのデジタル化、セルフレジ連動型マイナリーダーの特需が地方中規模病院でも発生。</p>
-                </div>
-                <a href="https://www.nikkei.com/" class="article-link">日経新聞で続きを読む</a>
-            </article>
-
-            <article class="news-card">
-                <span class="source-tag">日本経済新聞</span>
-                <h2>地方病院のクラウド移行支援、政府がサイバーセキュリティ対策費を増額</h2>
-                <div class="summary-item"><span class="label label-point">要点</span>
-                    <p class="content">相次ぐランサムウェア被害を受け、地方病院のオンプレミス脱却とクラウド化への補助を強化。</p>
-                </div>
-                <div class="summary-item"><span class="label label-background">背景</span>
-                    <p class="content">独自の電子カルテ運営では脆弱性をカバーしきれない現実があり、中央集約的なDXが推奨される。</p>
-                </div>
-                <div class="summary-item"><span class="label label-impact">影響</span>
-                    <p class="content">マネージドセキュリティサービス（MSSP）の需要が医療特化型で急伸。導入コンサルが活発化。</p>
-                </div>
-                <a href="https://www.nikkei.com/" class="article-link">日経新聞で続きを読む</a>
-            </article>
+            
         </div>
 
-        <h2 class="section-title">PR TIMES (医療AI・最新プレスリリース)</h2>
+        <!-- 論文セクション -->
+        <h2 class="section-title paper">最新論文・研究情報</h2>
         <div class="news-grid">
-            <article class="news-card">
-                <span class="source-tag">PR TIMES</span>
-                <h2>アイリス、京都大学病院と次世代医療基盤法によるデータ構築を開始</h2>
-                <div class="summary-item"><span class="label label-point">要点</span>
-                    <p class="content">AI医療機器のアイリスが、大学病院のビッグデータを活用し、より高精度な診断モデルを開発。</p>
+            
+            <article class="news-card" style="border-top: 4px solid var(--paper-color);">
+                <span class="source-tag paper-tag">npj Digital Medicine</span>
+                <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">Ten-year population-based assessment of multimorbidity burden progression in a regional cohort of 5.5 million adults</h2>
+                <div class="summary-item"><span class="label label-point">要点</span>要約生成失敗</div>
+                <div class="summary-item"><span class="label label-background">背景</span>APIエラー
                 </div>
-                <div class="summary-item"><span class="label label-background">背景</span>
-                    <p class="content">次世代医療基盤法により、秘匿化された医療データの商業利用パスが整い、開発スピードが加速。</p>
-                </div>
-                <div class="summary-item"><span class="label label-impact">影響</span>
-                    <p class="content">「データを持つ病院」と「AIベンダー」の独占的提携が、今後の市場シェアを決定づける要因に。</p>
-                </div>
-                <a href="https://prtimes.jp/main/html/rd/p/000000101.000035901.html" class="article-link">PR
-                    TIMESで続きを読む</a>
+                <div class="summary-item"><span class="label label-impact">影響</span>N/A</div>
+                <a href="https://www.nature.com/articles/s41746-026-02395-x" class="article-link" target="_blank"
+                    style="color: var(--paper-color);">論文を読む</a>
             </article>
-
-            <article class="news-card">
-                <span class="source-tag">PR TIMES</span>
-                <h2>ヘッジホッグ・メドテック、日本初の「頭痛AI診断プログラム」を承認申請</h2>
-                <div class="summary-item"><span class="label label-point">要点</span>
-                    <p class="content">患者の頭痛パターンをAIが聞き取り、疾患を推測。SaMD（プログラム医療機器）として申請。</p>
+            
+            <article class="news-card" style="border-top: 4px solid var(--paper-color);">
+                <span class="source-tag paper-tag">npj Digital Medicine</span>
+                <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">Challenges in applying the EU AI act research exemptions to contemporary AI research</h2>
+                <div class="summary-item"><span class="label label-point">要点</span>要約生成失敗</div>
+                <div class="summary-item"><span class="label label-background">背景</span>APIエラー
                 </div>
-                <div class="summary-item"><span class="label label-background">背景</span>
-                    <p class="content">専門医へのアクセスが難しい頭痛分野にて、AIによるトリアージ（優先順位付け）の実現を目指す。</p>
-                </div>
-                <div class="summary-item"><span class="label label-impact">影響</span>
-                    <p class="content">製薬企業へのDTx（デジタル治療）としてのライセンス供与など、新たなB2Bモデルの先行事例に。</p>
-                </div>
-                <a href="https://prtimes.jp/" class="article-link">PR TIMESで続きを読む</a>
+                <div class="summary-item"><span class="label label-impact">影響</span>N/A</div>
+                <a href="https://www.nature.com/articles/s41746-025-02263-0" class="article-link" target="_blank"
+                    style="color: var(--paper-color);">論文を読む</a>
             </article>
-
-            <article class="news-card">
-                <span class="source-tag">PR TIMES</span>
-                <h2>アナウト、手術認識支援AI「EUREKA α」の適応拡大を達成</h2>
-                <div class="summary-item"><span class="label label-point">要点</span>
-                    <p class="content">AIが手術動画をリアルタイム解析し、臓器や血管を強調表示。薬事承認を取得し臨床導入へ。</p>
+            
+            <article class="news-card" style="border-top: 4px solid var(--paper-color);">
+                <span class="source-tag paper-tag">The Lancet Digital Health</span>
+                <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">[Editorial] Preserving the integrity of clinical trials</h2>
+                <div class="summary-item"><span class="label label-point">要点</span>要約生成失敗</div>
+                <div class="summary-item"><span class="label label-background">背景</span>APIエラー
                 </div>
-                <div class="summary-item"><span class="label label-background">背景</span>
-                    <p class="content">外科医の働き方改革と安全性向上のため、ベテランの「目」をAIで再現するニーズが高まっている。</p>
-                </div>
-                <div class="summary-item"><span class="label label-impact">影響</span>
-                    <p class="content">手術室DX関連のハードウェアベンダーとの協業が加速。病院のハイテク化を象徴するソリューション。</p>
-                </div>
-                <a href="https://prtimes.jp/" class="article-link">PR TIMESで続きを読む</a>
+                <div class="summary-item"><span class="label label-impact">影響</span>N/A</div>
+                <a href="https://www.thelancet.com/journals/landig/article/PIIS2589-7500(25)00152-9/fulltext?rss=yes" class="article-link" target="_blank"
+                    style="color: var(--paper-color);">論文を読む</a>
             </article>
-
-            <article class="news-card">
-                <span class="source-tag">PR TIMES</span>
-                <h2>自治医科大発DeepEyeVision、緑内障効率化AI「AI-CO」全国販売</h2>
-                <div class="summary-item"><span class="label label-point">要点</span>
-                    <p class="content">眼底写真からAIが緑内障の疑いを判定。スクリーニングの自動化により、早期発見率を向上。</p>
+            
+            <article class="news-card" style="border-top: 4px solid var(--paper-color);">
+                <span class="source-tag paper-tag">The Lancet Digital Health</span>
+                <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">[Comment] Evaluating the effect of visual data on multimodal artificial intelligence diagnostic performance</h2>
+                <div class="summary-item"><span class="label label-point">要点</span>要約生成失敗</div>
+                <div class="summary-item"><span class="label label-background">背景</span>APIエラー
                 </div>
-                <div class="summary-item"><span class="label label-background">背景</span>
-                    <p class="content">失明原因上位の緑内障に対し、専門医不足の地域でも高精度な検査が可能な環境を構築する。</p>
-                </div>
-                <div class="summary-item"><span class="label label-impact">影響</span>
-                    <p class="content">地域の健康診断や眼鏡店との連携など、病院外のタッチポイントでの普及が期待される。</p>
-                </div>
-                <a href="https://prtimes.jp/" class="article-link">PR TIMESで続きを読む</a>
+                <div class="summary-item"><span class="label label-impact">影響</span>N/A</div>
+                <a href="https://www.thelancet.com/journals/landig/article/PIIS2589-7500(25)00120-7/fulltext?rss=yes" class="article-link" target="_blank"
+                    style="color: var(--paper-color);">論文を読む</a>
             </article>
-
-            <article class="news-card">
-                <span class="source-tag">PR TIMES</span>
-                <h2>ホリエモンAI学校「病院・クリニック校」を開校、DX人材を育成</h2>
-                <div class="summary-item"><span class="label label-point">要点</span>
-                    <p class="content">医療現場特化型のAI活用カリキュラムを提供。経営層から現場まで一気通貫のDX教育を実施。</p>
-                </div>
-                <div class="summary-item"><span class="label label-background">背景</span>
-                    <p class="content">ツールを導入しても使いこなせる人材がいない、という医療現場最大のボトルネック解消を狙う。</p>
-                </div>
-                <div class="summary-item"><span class="label label-impact">影響</span>
-                    <p class="content">医療機関の「リスキリング」がビジネス化。保守的な業界でのAIリテラシー向上に寄与。</p>
-                </div>
-                <a href="https://prtimes.jp/" class="article-link">PR TIMESで続きを読む</a>
-            </article>
+            
         </div>
+
+        <nav class="pagination">
+            
+            <a href="archive/2026-01-31.html" class="nav-btn">＜ 2026-01-31</a>
+            
+            <a href="../index.html" class="nav-btn" style="border: none;">最新に戻る</a>
+            <span class="nav-btn disabled">次の日 ＞</span>
+        </nav>
     </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2026 Medical DX & AI Curation Tool. 毎日午前中に最新の10記事を自動更新（予定）。</p>
+        <div class="container" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+            <p>&copy; 2026 Medical DX & AI Curation</p>
         </div>
     </footer>
 
