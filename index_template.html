@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ update_date }} | 医療DX & AI ニュース</title>
+    <title>{{ update_date }} | 医療DX & AI ニュース・論文</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -20,6 +20,7 @@
             --text-main: #212529;
             --text-secondary: #495057;
             --text-muted: #6c757d;
+            --paper-color: #6a1b9a;
         }
 
         * {
@@ -56,13 +57,26 @@
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
             display: inline-block;
+            margin-bottom: 0.5rem;
         }
 
         h1 {
             font-size: 2rem;
             color: var(--primary-color);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            color: var(--primary-color);
+            border-left: 5px solid var(--primary-color);
+            padding-left: 1rem;
+        }
+
+        .section-title.paper {
+            color: var(--paper-color);
+            border-color: var(--paper-color);
         }
 
         .news-grid {
@@ -96,6 +110,10 @@
             background-color: var(--accent-color);
             border-radius: 50%;
             margin-right: 0.5rem;
+        }
+
+        .source-tag.paper-tag::before {
+            background-color: var(--paper-color);
         }
 
         .label {
@@ -135,7 +153,6 @@
             padding-top: 1rem;
         }
 
-        /* ナビゲーションボタン */
         .pagination {
             display: flex;
             justify-content: center;
@@ -152,7 +169,6 @@
             padding: 0.8rem 1.5rem;
             border: 2px solid var(--primary-color);
             border-radius: 8px;
-            transition: all 0.2s;
         }
 
         .nav-btn:hover {
@@ -163,7 +179,6 @@
         .nav-btn.disabled {
             color: #ccc;
             border-color: #ccc;
-            cursor: not-allowed;
             pointer-events: none;
         }
 
@@ -180,13 +195,15 @@
     <header>
         <div class="container">
             <span class="update-badge">Update: {{ update_date }}</span>
-            <h1>医療DX & AI キュレーション</h1>
+            <h1>医療DX & AI ニュース・論文報</h1>
         </div>
     </header>
 
     <main class="container">
+        <!-- ニュースセクション -->
+        <h2 class="section-title">最新ビジネス・ニュース</h2>
         <div class="news-grid">
-            {% for article in articles %}
+            {% for article in news_articles %}
             <article class="news-card">
                 <span class="source-tag">{{ article.source }}</span>
                 <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">{{ article.title }}</h2>
@@ -199,27 +216,37 @@
             {% endfor %}
         </div>
 
-        <!-- ページ遷移ボタン -->
+        <!-- 論文セクション -->
+        <h2 class="section-title paper">最新論文・研究情報</h2>
+        <div class="news-grid">
+            {% for article in paper_articles %}
+            <article class="news-card" style="border-top: 4px solid var(--paper-color);">
+                <span class="source-tag paper-tag">{{ article.source }}</span>
+                <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">{{ article.title }}</h2>
+                <div class="summary-item"><span class="label label-point">要点</span>{{ article.summary.point }}</div>
+                <div class="summary-item"><span class="label label-background">背景</span>{{ article.summary.background }}
+                </div>
+                <div class="summary-item"><span class="label label-impact">影響</span>{{ article.summary.impact }}</div>
+                <a href="{{ article.url }}" class="article-link" target="_blank"
+                    style="color: var(--paper-color);">論文を読む</a>
+            </article>
+            {% endfor %}
+        </div>
+
         <nav class="pagination">
             {% if prev_date %}
             <a href="archive/{{ prev_date }}.html" class="nav-btn">＜ {{ prev_date }}</a>
             {% else %}
             <span class="nav-btn disabled">＜ 前の日</span>
             {% endif %}
-
             <a href="../index.html" class="nav-btn" style="border: none;">最新に戻る</a>
-
-            {% if next_date %}
-            <a href="archive/{{ next_date }}.html" class="nav-btn">{{ next_date }} ＞</a>
-            {% else %}
             <span class="nav-btn disabled">次の日 ＞</span>
-            {% endif %}
         </nav>
     </main>
 
     <footer>
         <div class="container" style="text-align: center; color: var(--text-muted); padding: 2rem;">
-            <p>&copy; 2026 Medical DX Curation Archive</p>
+            <p>&copy; 2026 Medical DX & AI Curation</p>
         </div>
     </footer>
 

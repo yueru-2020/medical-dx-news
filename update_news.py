@@ -6,6 +6,7 @@ from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 from jinja2 import Template
 import openai
+import feedparser
 
 # --- 設定 ---
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "YOUR_API_KEY_HERE")
@@ -13,8 +14,6 @@ openai.api_key = OPENAI_API_KEY
 
 TEMPLATE_FILE = "index_template.html"
 ARCHIVE_DIR = "archive"
-# GitHub Pages上で公開されるURLのベース（ユーザーの環境に合わせて調整）
-BASE_URL = "https://yueru-2020.github.io/medical-dx-news"
 
 if not os.path.exists(ARCHIVE_DIR):
     os.makedirs(ARCHIVE_DIR)
@@ -36,11 +35,9 @@ async def fetch_nikkei_articles():
                 if title_tag and link_tag:
                     title = title_tag.get_text(strip=True)
                     url = link_tag['href']
-                    if url.startswith("/"):
-                        url = "https://www.nikkei.com" + url
-                    articles.append({"source": "日本経済新聞", "title": title, "url": url})
-        except Exception as e:
-            print(f"Nikkei error: {e}")
+                    if url.startswith("/"): url = "https://www.nikkei.com" + url
+                    articles.append({"source": "日本経済新聞", "title": title, "url": url, "type": "news"})
+        except Exception as e: print(f"Nikkei error: {e}")
         await browser.close()
     return articles
 
@@ -62,24 +59,73 @@ async def fetch_prtimes_articles():
                     title = title_tag.get_text(strip=True)
                     if "AI" in title.upper() or "人工知能" in title:
                         url = link_tag['href']
-                        if url.startswith("/"):
-                            url = "https://prtimes.jp" + url
-                        articles.append({"source": "PR TIMES", "title": title, "url": url})
+                        if url.startswith("/"): url = "https://prtimes.jp" + url
+                        articles.append({"source": "PR TIMES", "title": title, "url": url, "type": "news"})
                         found += 1
-                if found >= 5:
-                    break
-        except Exception as e:
-            print(f"PR TIMES error: {e}")
+                if found >= 5: break
+        except Exception as e: print(f"PR TIMES error: {e}")
         await browser.close()
     return articles
 
-def summarize_article(title):
-    """OpenAIを使用して3行要約を生成"""
-    prompt = f"以下の記事タイトルを編集者目線で3行（要点、背景、マーケターへの影響）に簡潔に要約して。各行『・』で始めて。\nタイトル: {title}"
+async def fetch_journal_papers():
+    """主要医学誌から最新論文を取得"""
+    papers = []
+    
+    # 1. npj Digital Medicine (RSS)
+    try:
+        feed = feedparser.parse("https://www.nature.com/npjdigitalmed.rss")
+        for entry in feed.entries[:2]:
+            papers.append({"source": "npj Digital Medicine", "title": entry.title, "url": entry.link, "type": "paper"})
+    except Exception as e: print(f"npj error: {e}")
+
+    # 2. The Lancet Digital Health (RSS)
+    try:
+        feed = feedparser.parse("https://www.thelancet.com/rssfeed/landig_current.xml")
+        for entry in feed.entries[:2]:
+            papers.append({"source": "The Lancet Digital Health", "title": entry.title, "url": entry.link, "type": "paper"})
+    except Exception as e: print(f"Lancet error: {e}")
+
+    # 3. NEJM AI (Scraping because RSS 403s)
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+        try:
+            await page.goto("https://ai.nejm.org/toc/nejmai/current", timeout=60000)
+            content = await page.content()
+            soup = BeautifulSoup(content, 'html.parser')
+            # Assuming standard Atypon structure for titles
+            items = soup.select(".art-title a, .hlFld-Title a")
+            found = 0
+            for item in items:
+                title = item.get_text(strip=True)
+                url = item['href']
+                if url.startswith("/"): url = "https://ai.nejm.org" + url
+                if title and url:
+                    papers.append({"source": "NEJM AI", "title": title, "url": url, "type": "paper"})
+                    found += 1
+                if found >= 2: break
+        except Exception as e: print(f"NEJM AI error: {e}")
+        await browser.close()
+    
+    return papers
+
+def summarize_item(item):
+    """OpenAIを使用して3行要約を生成 (ニュースと論文でプロンプトを微調整)"""
+    is_paper = item.get("type") == "paper"
+    role_desc = "医療IT・デジタルヘルス専門の編集者" if not is_paper else "医学論文の解説に長けたサイエンスライター"
+    
+    prompt = f"""
+    以下の{'論文タイトル' if is_paper else 'ニュースタイトル'}に基づき、編集者目線で3行（要点、背景、マーケターへの影響）に簡潔に要約してください。
+    各行を「・」で始めてください。
+    
+    タイトル: {item['title']}
+    """
+    
     try:
         response = openai.ChatCompletion.create(
             model="gpt-4o",
-            messages=[{"role": "system", "content": "医療IT専門の編集者です。"}, {"role": "user", "content": prompt}]
+            messages=[{"role": "system", "content": f"あなたは優秀な{role_desc}です。"},
+                      {"role": "user", "content": prompt}]
         )
         lines = response.choices[0].message.content.strip().split("\n")
         return {
@@ -88,46 +134,45 @@ def summarize_article(title):
             "impact": lines[2].replace("・", "").strip() if len(lines) > 2 else "N/A"
         }
     except:
-        return {"point": "取得失敗", "background": "API利用枠またはキーを確認", "impact": "N/A"}
+        return {"point": "要約生成失敗", "background": "APIエラー", "impact": "N/A"}
 
 async def main():
     today_str = datetime.now().strftime("%Y-%m-%d")
     yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
-    tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
     
-    # 記事取得
-    nikkei = await fetch_nikkei_articles()
-    prtimes = await fetch_prtimes_articles()
-    all_articles = nikkei + prtimes
+    print("ニュースを取得中...")
+    news_items = await fetch_nikkei_articles() + await fetch_prtimes_articles()
     
-    for art in all_articles:
-        art["summary"] = summarize_article(art["title"])
+    print("論文を取得中...")
+    paper_items = await fetch_journal_papers()
+    
+    all_items = news_items + paper_items
+    
+    print("要約を生成中...")
+    for item in all_items:
+        item["summary"] = summarize_item(item)
     
     # テンプレート読み込み
     with open(TEMPLATE_FILE, "r", encoding="utf-8") as f:
         template = Template(f.read())
     
-    # HTML生成（メイン）
+    # ニュースと論文を分けてテンプレートに渡す
+    render_news = [i for i in all_items if i["type"] == "news"]
+    render_papers = [i for i in all_items if i["type"] == "paper"]
+    
     html_content = template.render(
-        articles=all_articles,
+        news_articles=render_news,
+        paper_articles=render_papers,
         update_date=today_str,
-        prev_date=yesterday,
-        next_date=None # 最新ページに「次へ」は不要
+        prev_date=yesterday
     )
     
-    # index.html (最新) として保存
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-        
-    # アーカイブ用ファイルとしても保存 (例: archive/2026-02-01.html)
-    archive_path = f"{ARCHIVE_DIR}/{today_str}.html"
-    
-    # アーカイブ用には「次へ」も必要かもしれないが、生成時点では翌日は未来なので
-    # index.htmlと同じ内容で保存。過去分は翌日のスクリプト実行で「次へ」が繋がる運用になる。
-    with open(archive_path, "w", encoding="utf-8") as f:
+    with open(f"{ARCHIVE_DIR}/{today_str}.html", "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    print(f"Update completed: index.html & {archive_path}")
+    print("更新完了！")
 
 if __name__ == "__main__":
     asyncio.run(main())
