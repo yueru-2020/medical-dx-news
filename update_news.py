@@ -10,7 +10,7 @@ import feedparser
 
 # --- 設定 ---
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "YOUR_API_KEY_HERE")
-openai.api_key = OPENAI_API_KEY
+client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 TEMPLATE_FILE = "index_template.html"
 ARCHIVE_DIR = "archive"
